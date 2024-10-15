@@ -17,13 +17,14 @@ func main() {
 }
 
 func run() error {
-	handler := api.NewHandler()
+	db := make(map[string]string)
+	handler := api.NewHandler(db)
 
 	s := http.Server{
 		ReadTimeout:  10 * time.Second,
 		IdleTimeout:  time.Minute,
 		WriteTimeout: 10 * time.Second,
-		Addr:         ":8080",
+		Addr:         ":3000",
 		Handler:      handler,
 	}
 
