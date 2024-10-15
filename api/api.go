@@ -37,7 +37,7 @@ func NewHandler(db map[string]string) http.Handler {
 	r.Use(middleware.RequestID)
 	r.Use(middleware.Logger)
 
-	r.Post("/api/shorten", handlePost(db))
+	r.Post("/shorten", handlePost(db))
 	r.Get("/{code}", handleGet(db))
 
 	return r
@@ -88,7 +88,13 @@ func genCode() string {
 
 func handleGet(db map[string]string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-
+		code := chi.URLParam(r, "code")
+		url, ok := db[code]
+		if !ok {
+			http.Error(w, "url não encontrada", http.StatusNotFound)
+			return
+		}
+		http.Redirect(w, r, url, http.StatusPermanentRedirect)
 	}
 
 }
